@@ -66,7 +66,7 @@
                             <li>
                                 <i class="bi bi-envelope-paper"></i>
                                 <h4>Email address</h4>
-                                <p><a href="mailto:support@elekooceanresort.com">support@elekooceanresort.com</a></p>
+                                <p><a href="mailto:elekooceanresort@gmail.com">elekooceanresort@gmail.com</a></p>
                             </li>
                             <li>
                                 <i class="bi bi-telephone"></i>

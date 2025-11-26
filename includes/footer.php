@@ -9,7 +9,7 @@
                 <h5>Contacts</h5>
                 <ul>
                     <li>Adepeyin Olowu street, Eleko Beach road<br>Ibeju-lekki, Lagos<br><br></li> 
-                    <li><strong><a href="#0">support@elekooceanresort.com</a></strong></li>
+                    <li><strong><a href="mailto:elekooceanresort@gmail.com">elekooceanresort@gmail.com</a></strong></li>
                     <li><strong><a href="tel://+2348149986209">+234 814 998 6209</a></strong></li>
                 </ul>
                 <div class="social">

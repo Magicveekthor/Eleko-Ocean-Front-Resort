@@ -1,4 +1,5 @@
 <?php
+//session_start();
 require_once('admin/includes/db.php');
 require_once('admin/includes/functions.php');
 
@@ -271,54 +272,76 @@ if(mysqli_num_rows($thumb_query) > 0) {
 
     let booking_form = document.getElementById('booking-form');
     let bookingSubmitBtn = document.getElementById('bookingSubmitBtn');
-    let bookingSpinner = document.getElementById('bookingSpinner');
-    let bookingBtnText = bookingSubmitBtn.querySelector(".btn-text");
-    let message_contact = document.getElementById('message-contact');
+    let message_contact = document.getElementById('message-contact');   // FIXED ID
 
-    function check_availability(){
+    function check_availability() {
+
         let checkin_val = booking_form.elements['checkin'].value;
         let checkout_val = booking_form.elements['checkout'].value;
 
-        // booking_form.elements['pay_now'].setAttribute('disabled', true);
+        if(checkin_val !== '' && checkout_val !== '') {
 
-        if(checkin_val!='' && checkout_val!='') {
-            
-            let data = new FormData();
-
-            data.append('check_availability', '');
-            data.append('check_in', checkin_val);
-            data.append('check_out', checkout_val);
+            let formData = new FormData();
+            formData.append('check_availability', '');
+            formData.append('check_in', checkin_val);
+            formData.append('check_out', checkout_val);
 
             let xhr = new XMLHttpRequest();
-            xhr.open("POST","ajax/confirm_booking.php", true);
+            xhr.open("POST", "ajax/confirm_booking.php", true);
 
             xhr.onload = function() {
+
                 let data = JSON.parse(this.responseText);
 
-                if (data.status == 'check_in_out_equal') {
-                    bookingSubmitBtn.classList.add('d-none');
+                // hide pay button by default
+                bookingSubmitBtn.classList.add('d-none');
+
+                // clear previous style
+                message_contact.className = "";
+                message_contact.innerHTML = "";
+
+                //-- CONDITIONS --
+
+                if (data.status === 'check_in_out_equal') {
                     message_contact.innerText = "You cannot check-out on the same day!";
-                } else if (data.status == 'check_out_earlier') {
-                    bookingSubmitBtn.classList.add('d-none');
+                    message_contact.classList.add("text-danger");
+                }
+
+                else if (data.status === 'check_out_earlier') {
                     message_contact.innerText = "Check-out date is earlier than check-in date!";
-                } else if (data.status == 'check_in_earlier') {
-                    bookingSubmitBtn.classList.add('d-none');
-                    message_contact.innerText = "Check-in date is earlier than today's date!";
-                } else if (data.status == 'unavailable') {
-                    bookingSubmitBtn.classList.add('d-none');
-                    message_contact.innerText = "Room not available for this check-in date";
-                } else {
-                    message_contact.innerHTML = "Number of Days: "+data.days+"<br>Total Amount to Pay: &#8358;"+data.payment;
-                    message_contact.classList.replace('text-danger','text-dark');
+                    message_contact.classList.add("text-danger");
+                }
+
+                else if (data.status === 'check_in_earlier') {
+                    message_contact.innerText = "Check-in date is earlier than today!";
+                    message_contact.classList.add("text-danger");
+                }
+
+                else if (data.status === 'unavailable') {
+                    message_contact.innerText = "Room is NOT available for this selected period! Choose another check-in date";
+                    message_contact.classList.add("text-danger");
+                }
+
+                else if (data.status === 'available') {
+
+                    message_contact.innerHTML =
+                        "Days: " + data.days + " Days" + "<br>" +
+                        "Total Amount: ₦" + data.payment;
+
+                    message_contact.classList.add("text-success");
+
+                    // set hidden total amount input
                     document.getElementById("total_amount").value = data.payment;
+
+                    // show button
                     bookingSubmitBtn.classList.remove('d-none');
                 }
-                message_contact.classList
-            }
+            };
 
-            xhr.send(data);
+            xhr.send(formData);
         }
     }
+
 
     function pay_now() {
 

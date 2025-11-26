@@ -27,13 +27,7 @@ if(isset($_POST['check_availability'])) {
           Overlap formula:
           NOT (existing.checkout <= new.checkin OR existing.checkin >= new.checkout)
     --------------------------------------------------------- */
-    $book_sql = "
-        SELECT COUNT(*) AS total_booked 
-        FROM booking_order 
-        WHERE room_name = ? 
-        AND booking_status = 'booked'
-        AND NOT (check_out <= ? OR check_in >= ?)
-    ";
+    $book_sql = "SELECT COUNT(*) AS total_booked FROM booking_order  WHERE room_name = ? AND booking_status = 'booked' AND NOT (check_out <= ? OR check_in >= ?)";
 
     $book_stmt = $mysqli->prepare($book_sql);
     $book_stmt->bind_param("sss", $room_name, $in, $out);

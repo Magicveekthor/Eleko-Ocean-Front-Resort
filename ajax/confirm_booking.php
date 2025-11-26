@@ -1,4 +1,5 @@
 <?php
+session_start();
 require('../admin/includes/db.php');
 require('../admin/includes/functions.php');
 
@@ -10,7 +11,6 @@ if(isset($_POST['check_availability'])) {
     $result = "";
 
     // check in and out validations
-
     $today_date = new DateTime(date("d-m-Y"));
     $checkin_date = new DateTime(($frm_data['check_in']));
     $checkout_date = new DateTime(($frm_data['check_out']));
@@ -30,32 +30,35 @@ if(isset($_POST['check_availability'])) {
     if($status != ''){
         echo $result;
     } else {
-        session_start();
+        // GET ROOM QUANTITY (match AJAX logic)
+        $rq_sql = "SELECT quantity FROM rooms WHERE id = ?";
+        $rq_res = select($rq_sql, [$_SESSION['room']['id']], "i");
+        $rq_row = mysqli_fetch_assoc($rq_res);
+        $room_quantity = $rq_row['quantity'];
 
-        // run query to check room is available of not 
-        $tb_query = "SELECT COUNT(*) AS `total_booking` FROM `booking_order` WHERE booking_status = ? AND room_name = ? AND check_out > ? AND check_in < ?";
+        // CHECK OVERLAPPING BOOKINGS
+        $tb_query = "SELECT COUNT(*) AS total_booking FROM booking_order WHERE booking_status = ? AND room_name = ? AND NOT (check_out <= ? OR check_in >= ?)";
+
         $values = ['booked', $_SESSION['room']['name'], $frm_data['check_in'], $frm_data['check_out']];
-        $tb_fetch = mysqli_fetch_assoc(select($tb_query, $values, 'siss'));
 
-        // room quality
-        $rq_result = select("SELECT `quantity` FROM `rooms` WHERE `id` = ?", [$_SESSION['room']['id']], 'i');
-        $rq_fetch = mysqli_fetch_assoc($rq_result);
+        $tb_fetch = mysqli_fetch_assoc(select($tb_query, $values, "ssss"));
+        $total_booked = $tb_fetch['total_booking'];
 
-        if(($rq_fetch['quantity'] - $tb_fetch['total_booking']) == 0) {
-            $status = 'unavailable';
-            $result = json_encode(['status' => $status]);
-            echo $result;
+        // COMPARE WITH QUANTITY (correct logic)
+        if($total_booked >= $room_quantity){
+            echo json_encode(["status" => "unavailable"]);
             exit;
         }
 
+        // CALCULATE PAYMENT
         $count_days = date_diff($checkin_date, $checkout_date)->days;
-        $payment  = $_SESSION['room']['price'] * $count_days;
+        $payment = $_SESSION['room']['price'] * $count_days;
 
         $_SESSION['room']['payment'] = $payment;
         $_SESSION['room']['available'] = true;
 
-        $result = json_encode(["status" => 'available', "days" => $count_days, "payment" => $payment]);
-        echo $result;
+        echo json_encode(["status" => "available", "days" => $count_days, "payment" => $payment]);
+
     }
 }
 ?>
