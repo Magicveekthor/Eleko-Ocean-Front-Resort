@@ -1,0 +1,185 @@
+:root {
+    --brand-color: #618B4A;
+    --brand-color-1: #202a25;
+    --brand-color-2: #EFECCA;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+.table-data .container {
+    max-width: 100%;
+    width: 100%;
+}
+
+.table-data .container .title {
+    font-size: 25px;
+    font-weight: 500;
+    position: relative;
+}
+
+.table-data .container .title::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 30px;
+    background: var(--blue);
+}
+
+.container form .project-details {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 20px 0 12px 0;
+}
+
+form .project-details .input-box {
+    margin-bottom: 15px;
+}
+
+form .project-details .input-box .details {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+form .project-details .input-box input,
+form .project-details .input-box select {
+    height: 45px;
+    width: 100%;
+    outline: none !important;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-family: var(--poppins);
+    padding-left: 15px;
+    font-size: 16px;
+    border-bottom-width: 2px;
+    transition: all 0.5s ease;
+}
+
+form .project-details .input-box textarea {
+    height: 134px;
+    width: 100%;
+    outline: none !important;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-family: var(--poppins);
+    padding-left: 15px;
+    font-size: 16px;
+    border-bottom-width: 2px;
+    transition: all 0.5s ease;
+}
+
+form .project-details .input-box input[type="file"] {
+    border: 1px solid #ccc;
+    padding-left: 0 !important;
+    border-bottom-width: 2px !important;
+}
+
+form .project-details .input-box input[type="file"]::file-selector-button {
+    height: 42px;
+    color: var(--brand-color-2);
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+    background: var(--brand-color);
+    font-family: var(--poppins);
+}
+
+form .project-details .input-box input:focus,
+form .project-details .input-box input:valid,
+form .project-details .input-box select:focus,
+form .project-details .input-box textarea:focus {
+    border-color: var(--brand-color);
+}
+/* 
+form .button {
+    height: 45px;
+    margin: 45px 0;
+} */
+
+form .button {
+    height: 40px;
+    width: 100%;
+    outline: none;
+    border: none;
+    color: #fff;
+    font-family: var(--poppins);
+    font-weight: 500;
+    letter-spacing: 1px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    background: var(--brand-color);
+    cursor: pointer;
+    transition: all 0.5s ease;
+}
+
+.form_two {
+    display: flex;
+    align-items: end;
+    gap: 10px;
+}
+
+form .button_project {
+    height: 24px;
+    width: 60px;
+    outline: none;
+    border: none;
+    color: #fff;
+    font-family: var(--poppins);
+    font-weight: 500;
+    letter-spacing: 1px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    background: #d11a2a;
+    cursor: pointer;
+    transition: all 0.5s ease;
+}
+
+form .button input:hover {
+    color: var(--brand-color-1);
+    background: #8CB675;
+}
+
+form img {
+    width:50px; 
+    height:50px; 
+    margin-top:5px; 
+    border-radius:50%;
+    object-fit: cover;
+}
+
+/*============= ALERT =============*/
+.alert-container {
+    position: fixed;
+    top: 108px;
+    right: 23px;
+    /* width: 100%; */
+    z-index: 1055;
+}
+
+@media (max-width: 584px) {
+    .container {
+        max-width: 100% !important;
+    }
+
+    form .project-details .input-box {
+        margin-bottom: 15px;
+        width: 100% !important;
+    }
+
+    form .button input {
+        width: 100%;
+    }
+
+    .alert-container {
+        margin: 0 auto;
+    }
+}
